@@ -1,0 +1,79 @@
+[gd_scene load_steps=8 format=3 uid="uid://bk7nyk2srjiec"]
+
+[ext_resource type="Script" uid="uid://b5t5wvopeb4sj" path="res://scripts/game_manager.gd" id="1_lbhrr"]
+[ext_resource type="PackedScene" uid="uid://c8mveitg1m3nf" path="res://scenes/player_paddle.tscn" id="1_yqjtg"]
+[ext_resource type="PackedScene" uid="uid://d2sxa06yox5r" path="res://scenes/ball.tscn" id="3_lnu2h"]
+[ext_resource type="PackedScene" uid="uid://dqnduoxh7eof0" path="res://scenes/score_area.tscn" id="4_lbhrr"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_lnu2h"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_lbhrr"]
+distance = -321.0
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_iywne"]
+distance = -324.0
+
+[node name="Game" type="Node2D"]
+script = ExtResource("1_lbhrr")
+
+[node name="Camera" type="Camera2D" parent="."]
+
+[node name="PlayerPaddleLeft" parent="." instance=ExtResource("1_yqjtg")]
+position = Vector2(-570, 0)
+controlledBy = 1
+
+[node name="PlayerPaddleRight" parent="." instance=ExtResource("1_yqjtg")]
+position = Vector2(570, 0)
+controlledBy = 2
+
+[node name="Ball" parent="." instance=ExtResource("3_lnu2h")]
+
+[node name="Walls" type="Node2D" parent="."]
+
+[node name="WallTop" type="StaticBody2D" parent="Walls"]
+physics_material_override = SubResource("PhysicsMaterial_lnu2h")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/WallTop"]
+position = Vector2(0, -3)
+rotation = 3.14159
+shape = SubResource("WorldBoundaryShape2D_lbhrr")
+
+[node name="WallBottom" type="StaticBody2D" parent="Walls"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/WallBottom"]
+shape = SubResource("WorldBoundaryShape2D_iywne")
+
+[node name="ScoreLabelLeft" type="Label" parent="."]
+offset_left = -445.0
+offset_top = -265.0
+offset_right = -194.0
+offset_bottom = -220.0
+theme_override_font_sizes/font_size = 32
+text = "Player 1 score: 0"
+horizontal_alignment = 1
+
+[node name="ScoreLabelRight" type="Label" parent="."]
+offset_left = 171.0
+offset_top = -268.0
+offset_right = 467.0
+offset_bottom = -223.0
+theme_override_font_sizes/font_size = 32
+text = "Player 2 score: 0"
+horizontal_alignment = 1
+
+[node name="ScoreAreaLeft" parent="." node_paths=PackedStringArray("player") instance=ExtResource("4_lbhrr")]
+position = Vector2(-576, 0)
+player = NodePath("../PlayerPaddleRight")
+
+[node name="ScoreAreaRight" parent="." node_paths=PackedStringArray("player") instance=ExtResource("4_lbhrr")]
+position = Vector2(576, 0)
+rotation = 3.14159
+player = NodePath("../PlayerPaddleLeft")
+
+[node name="StartGameTipLabel" type="Label" parent="."]
+offset_left = -123.0
+offset_top = 28.0
+offset_right = 123.0
+offset_bottom = 62.0
+theme_override_font_sizes/font_size = 24
+text = "Press \"space\" to start"
